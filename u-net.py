@@ -1,5 +1,5 @@
 import torch
-from .unet_parts import *
+from unet_parts import *
 
 class CCANet(torch.nn.Module):
 
@@ -17,11 +17,11 @@ class CCANet(torch.nn.Module):
         self.down3 = Down(256, 512)
         factor = 2 if bilinear else 1
         self.down4 = Down(512, 1024 // factor)
-        self.up1 = Up(1024, 512// factor, bilinear)
+        self.up1 = Up(1024, 512 // factor, bilinear)
         self.up2 = Up(512, 256 // factor, bilinear)
-        self.up3 = Up(256, 128// factor, bilinear)
+        self.up3 = Up(256, 128 // factor, bilinear)
         self.up4 = Up(128, 64 // factor, bilinear)
-        self.outc = OutConv(64, n_classes)
+        self.outc = OutConv(32, n_classes)
 
     
     def forward(self, x):
@@ -33,13 +33,14 @@ class CCANet(torch.nn.Module):
         x = self.up1(x5, x4)
         x = self.up2(x, x3)
         x = self.up3(x, x2)
-        x = self.up4(x, x1
+        x = self.up4(x, x1)
+        # print(x.shape)
         logits = self.outc(x)
         return logits
 
 if __name__ == '__main__':
 
-    model = CCANet()
+    model = CCANet(n_channels=3, n_classes=2)
     d_input = torch.randn((1, 3, 128, 128))
     pred = model(d_input)
-    print(pred)
+    print(pred.shape)
