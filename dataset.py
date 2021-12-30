@@ -22,9 +22,9 @@ def json_parse(image_dir, json_path):
     return file_name_list, anno
 
 
-class CarotidUltrasonicSet(Dataset):
+class CarotidSet(Dataset):
     def __init__(self, image_dir, json_path):
-        super(CarotidUltrasonicSet, self).__init__()
+        super(CarotidSet, self).__init__()
 
         self.image_path, self.anno = json_parse(image_dir, json_path)
 
@@ -82,7 +82,7 @@ class CarotidUltrasonicSet(Dataset):
         return (img_roi, img_li, img_ma)
 
 if __name__ == '__main__':
-    dataset = CarotidUltrasonicSet(image_dir='small_dataset', json_path='gTruth_pp_small.json')
+    dataset = CarotidSet(image_dir='small_dataset', json_path='gTruth_pp_small.json')
 
     for i, (img, img_li, img_ma) in enumerate(dataset):
         print(img.shape)
